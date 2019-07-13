@@ -1,8 +1,8 @@
 script_name("AntiRadar")
 script_author('akionka')
 script_description('Информирует пользователя о приближении к камере')
-script_version('1.0.1')
-script_version_number(2)
+script_version('1.0.2')
+script_version_number(3)
 script_url('vk.me/akionka')
 script_moonloader(27)
 
@@ -81,9 +81,8 @@ function main()
         break
       end
     end
-    -- isCharSittingInAnyCar(Ped ped)
-    if PLAYED_HANDLE ~= nil and PLAYED_PED ~= nil and isPlayerPlaying(PLAYED_HANDLE) and doesCharExist(PLAYER_PED) and not isCharDead(PLAYER_PED) and isCharInAnyCar(PLAYED_PED) and not isKeyDown(0x77) and nearestCamera.id then
-      -- if
+
+    if isCharInAnyCar(PLAYER_PED) and not isKeyDown(0x77) and nearestCamera.id then
       local distance = math.ceil(getDistanceBetweenCoords2d(x, y, nearestCamera.x, nearestCamera.y))
       if distance < 255 then
         local color = joinARGB(255, 255, distance, distance)
