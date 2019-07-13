@@ -4,7 +4,11 @@ script_description('Информирует пользователя о приб�
 script_version('1.0')
 script_version_number(1)
 script_url('vk.me/akionka')
-script_moonloader(26)
+script_moonloader(27)
+
+require 'deps' {
+  'fyp:samp-lua',
+}
 
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -54,6 +58,9 @@ end
 function main()
   if not isSampLoaded() or not isSampfuncsLoaded() then return end
   while not isSampAvailable() do wait(100)
+
+  if checkUpdates('https://github.com/Akionka/anti-radar/raw/master/version.json') then update('https://github.com/Akionka/anti-radar/raw/master/anti-radar-mh.lua') end
+
   while true do
     --[[
       В бесконечном цикле обрабатываем список камер. Если одна из них
@@ -66,7 +73,6 @@ function main()
       палиться на скриншотах, а то мало-ли :)
      ]]
 
-     if checkUpdates('https://github.com/Akionka/anti-radar/raw/master/version.json') then update('https://github.com/Akionka/anti-radar/raw/master/anti-radar-mh.lua') end
 
     local x, y, z = getCoordinates()
     for i, v in ipairs(cameras) do
@@ -83,6 +89,7 @@ function main()
       end
     end
     wait(0)
+    end
   end
 end
 
