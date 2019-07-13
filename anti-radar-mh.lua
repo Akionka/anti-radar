@@ -1,8 +1,8 @@
 script_name("AntiRadar")
 script_author('akionka')
 script_description('Информирует пользователя о приближении к камере')
-script_version('1.0')
-script_version_number(1)
+script_version('1.0.1')
+script_version_number(2)
 script_url('vk.me/akionka')
 script_moonloader(27)
 
@@ -57,7 +57,7 @@ end
 
 function main()
   if not isSampLoaded() or not isSampfuncsLoaded() then return end
-  while not isSampAvailable() do wait(100)
+  while not isSampAvailable() do wait(100) end
 
   if checkUpdates('https://github.com/Akionka/anti-radar/raw/master/version.json') then update('https://github.com/Akionka/anti-radar/raw/master/anti-radar-mh.lua') end
 
@@ -81,7 +81,9 @@ function main()
         break
       end
     end
-    if isCharInAnyCar(PLAYED_PED) and not isKeyDown(0x77) and nearestCamera.id then
+    -- isCharSittingInAnyCar(Ped ped)
+    if PLAYED_HANDLE ~= nil and PLAYED_PED ~= nil and isPlayerPlaying(PLAYED_HANDLE) and doesCharExist(PLAYER_PED) and not isCharDead(PLAYER_PED) and isCharInAnyCar(PLAYED_PED) and not isKeyDown(0x77) and nearestCamera.id then
+      -- if
       local distance = math.ceil(getDistanceBetweenCoords2d(x, y, nearestCamera.x, nearestCamera.y))
       if distance < 255 then
         local color = joinARGB(255, 255, distance, distance)
@@ -89,7 +91,6 @@ function main()
       end
     end
     wait(0)
-    end
   end
 end
 
@@ -124,7 +125,7 @@ function checkUpdates(json)
   local fpath = os.tmpname()
   if doesFileExist(fpath) then os.remove(fpath) end
   downloadUrlToFile(json, fpath, function(_, status, _, _)
-    if status == dlstatus.STATUSEX_ENDDOWNLOAD then
+    if status == 58 then
       if doesFileExist(fpath) then
         local f = io.open(fpath, 'r')
         if f then
@@ -144,7 +145,7 @@ end
 
 function update(url)
   downloadUrlToFile(url, thisScript().path, function(_, status1, _, _)
-    if status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
+    if status1 == 6 then
       thisScript():reload()
     end
   end)
