@@ -1,13 +1,14 @@
-script_name("AntiRadar")
+script_name("anti-radar")
 script_author('akionka')
 script_description('Информирует пользователя о приближении к камере')
-script_version('1.0.2')
-script_version_number(3)
+script_version('1.0.3')
+script_version_number(4)
 script_url('vk.me/akionka')
 script_moonloader(27)
 
 require 'deps' {
   'fyp:samp-lua',
+  'kikito:semver'
 }
 
 local sampev = require 'lib.samp.events'
@@ -59,7 +60,10 @@ function main()
   if not isSampLoaded() or not isSampfuncsLoaded() then return end
   while not isSampAvailable() do wait(100) end
 
-  if checkUpdates('https://github.com/Akionka/anti-radar/raw/master/version.json') then update('https://github.com/Akionka/anti-radar/raw/master/anti-radar-mh.lua') end
+  local result, tag = checkUpdates()
+  if result then
+    update(tag)
+  end
 
   while true do
     --[[
@@ -120,20 +124,19 @@ function joinARGB(a, r, g, b)
   return argb
 end
 
-function checkUpdates(json)
+function checkUpdates()
   local fpath = os.tmpname()
   if doesFileExist(fpath) then os.remove(fpath) end
-  downloadUrlToFile(json, fpath, function(_, status, _, _)
+  downloadUrlToFile('https://api.github.com/repos/akionka/'..thisScript()['name']..'/releases', fpath, function(_, status, _, _)
     if status == 58 then
       if doesFileExist(fpath) then
         local f = io.open(fpath, 'r')
         if f then
           local info = decodeJson(f:read('*a'))
-          local updateversion = info.version_num
           f:close()
           os.remove(fpath)
-          if updateversion > thisScript().version_num then
-            return true
+          if v(info[1]['tag_name']) > v(thisScript()['version']) then
+            return true, info[1]['tag_name']
           end
         end
       end
@@ -142,9 +145,9 @@ function checkUpdates(json)
 end
 
 
-function update(url)
-  downloadUrlToFile(url, thisScript().path, function(_, status1, _, _)
-    if status1 == 6 then
+function update(tag)
+  downloadUrlToFile('https://github.com/akionka/'..thisScript()['name']..'/releases/download/'..tag..'/anti-radar-mh.lua', thisScript()['path'], function(_, status, _, _)
+    if status == 6 then
       thisScript():reload()
     end
   end)
