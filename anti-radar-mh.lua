@@ -1,8 +1,8 @@
 script_name("anti-radar")
 script_author('akionka')
 script_description('Информирует пользователя о приближении к камере')
-script_version('1.0.3')
-script_version_number(4)
+script_version('1.0.4')
+script_version_number(5)
 script_url('vk.me/akionka')
 script_moonloader(27)
 
@@ -11,8 +11,9 @@ require 'deps' {
   'kikito:semver'
 }
 
-local sampev = require 'lib.samp.events'
+local sampev   = require 'lib.samp.events'
 local encoding = require 'encoding'
+local v        = require 'semver'
 encoding.default = 'cp1251'
 local u8 = encoding.UTF8
 
