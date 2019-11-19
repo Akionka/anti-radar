@@ -1,19 +1,20 @@
 script_name("anti-radar")
 script_author('akionka')
 script_description('Информирует пользователя о приближении к камере')
-script_version('1.0.4')
-script_version_number(5)
+script_version('1.0.5')
+script_version_number(6)
 script_url('vk.me/akionka')
 script_moonloader(27)
 
 require 'deps' {
   'fyp:samp-lua',
-  'kikito:semver'
+  'Akionka:lua-semver',
 }
 
 local sampev   = require 'lib.samp.events'
 local encoding = require 'encoding'
 local v        = require 'semver'
+
 encoding.default = 'cp1251'
 local u8 = encoding.UTF8
 
